@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    name: Restore and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore LoginDemo.csproj
+
+      - name: Build
+        run: dotnet build LoginDemo.csproj --configuration Release --no-restore
+
+      - name: Test
+        shell: bash
+        run: |
+          mapfile -t test_projects < <(find . \
+            -path '*/bin' -prune -o \
+            -path '*/obj' -prune -o \
+            -name '*Tests.csproj' -print)
+
+          if [ "${#test_projects[@]}" -eq 0 ]; then
+            echo "No test projects found; skipping test step."
+            exit 0
+          fi
+
+          for project in "${test_projects[@]}"; do
+            dotnet test "$project" --configuration Release --collect:"XPlat Code Coverage"
+          done
