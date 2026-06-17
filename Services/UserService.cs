@@ -43,7 +43,7 @@ public class UserService : IUserService
     }
 
     public User? FindByUsername(string username) =>
-        _users.FirstOrDefault(u => string.Equals(u.Username, username, StringComparison.OrdinalIgnoreCase));
+        _users.FirstOrDefault(u => string.Equals(u.Username, NormalizeIdentifier(username), StringComparison.OrdinalIgnoreCase));
 
     public User? FindByEmail(string email) =>
         _users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase));
@@ -88,4 +88,6 @@ public class UserService : IUserService
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(input));
         return Convert.ToHexString(bytes);
     }
+
+    private static string NormalizeIdentifier(string input) => input.Trim();
 }
