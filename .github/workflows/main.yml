@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - Dev
+
+jobs:
+  test-build-coverage:
+    name: Test, Build and Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests with coverage
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Check coverage minimum 80%
+        run: |
+          npx nyc check-coverage \
+            --lines 80 \
+            --functions 80 \
+            --branches 80 \
+            --statements 80
+
+      - name: Build code
+        run: npm run build
