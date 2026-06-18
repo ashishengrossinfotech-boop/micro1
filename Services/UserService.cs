@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
 using LoginDemo.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace LoginDemo.Services;
 
@@ -15,25 +16,27 @@ public class UserService : IUserService
     private readonly List<User> _users;
     private readonly ConcurrentDictionary<string, (string Token, DateTime ExpiryUtc)> _resetTokens = new();
 
-    public UserService()
+    public UserService(IHostEnvironment environment)
     {
-        _users = new List<User>
-        {
-            new User
+        _users = environment.IsDevelopment()
+            ? new List<User>
             {
-                Username = "admin",
-                Email = "admin@example.com",
-                FullName = "Administrator",
-                PasswordHash = Hash("Admin@123")
-            },
-            new User
-            {
-                Username = "demo",
-                Email = "demo@example.com",
-                FullName = "Demo User",
-                PasswordHash = Hash("Demo@123")
+                new User
+                {
+                    Username = "admin",
+                    Email = "admin@example.com",
+                    FullName = "Administrator",
+                    PasswordHash = Hash("Admin@123")
+                },
+                new User
+                {
+                    Username = "demo",
+                    Email = "demo@example.com",
+                    FullName = "Demo User",
+                    PasswordHash = Hash("Demo@123")
+                }
             }
-        };
+            : new List<User>();
     }
 
     public bool ValidateCredentials(string username, string password)
