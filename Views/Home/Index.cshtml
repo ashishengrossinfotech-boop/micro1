@@ -1,8 +1,10 @@
+@using LoginDemo.Extensions
 @{
     ViewData["Title"] = "Home";
+    var displayName = User.GetDisplayName();
 }
 
 <div class="text-center">
-    <h1 class="display-5">Welcome, @User.Identity!.Name!</h1>
+    <h1 class="display-5">Welcome, @displayName!</h1>
     <p class="lead">You're logged in. This is the protected area of the demo app.</p>
 </div>
