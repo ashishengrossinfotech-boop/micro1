@@ -1,4 +1,5 @@
 @model LoginDemo.Models.LoginViewModel
+@inject Microsoft.Extensions.Hosting.IHostEnvironment Environment
 @{
     ViewData["Title"] = "Log in";
 }
@@ -35,10 +36,13 @@
             </div>
         </form>
 
-        <hr />
-        <p class="text-muted small">
-            Demo accounts: <code>admin / Admin@123</code> or <code>demo / Demo@123</code>
-        </p>
+        @if (Environment.IsDevelopment())
+        {
+            <hr />
+            <p class="text-muted small">
+                Local demo accounts: <code>admin / Admin@123</code> or <code>demo / Demo@123</code>
+            </p>
+        }
     </div>
 </div>
 

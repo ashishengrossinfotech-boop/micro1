@@ -17,7 +17,10 @@ swap pieces out of (plug in a real database, real email sending, Identity, etc.)
 - Passwords are hashed (SHA-256), never stored or compared in plain text
 - Anti-forgery tokens on every form post
 
-## Demo accounts
+## Local demo accounts
+
+These accounts are seeded only when the app runs in the `Development`
+environment. They are not seeded or displayed for production-facing builds.
 
 | Username | Password   |
 |----------|------------|
