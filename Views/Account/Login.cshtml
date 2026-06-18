@@ -1,6 +1,8 @@
 @model LoginDemo.Models.LoginViewModel
 @{
     ViewData["Title"] = "Log in";
+    var usernameInvalid = ViewData.ModelState["Username"]?.Errors.Count > 0;
+    var passwordInvalid = ViewData.ModelState["Password"]?.Errors.Count > 0;
 }
 
 <div class="row justify-content-center">
@@ -9,18 +11,27 @@
 
         <form asp-controller="Account" asp-action="Login" method="post">
             <input type="hidden" asp-for="ReturnUrl" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert" aria-live="assertive"></div>
 
             <div class="mb-3">
                 <label asp-for="Username" class="form-label"></label>
-                <input asp-for="Username" class="form-control" autofocus autocomplete="username" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <input asp-for="Username"
+                       class="form-control"
+                       autofocus
+                       autocomplete="username"
+                       aria-describedby="Username-validation"
+                       aria-invalid="@usernameInvalid.ToString().ToLowerInvariant()" />
+                <span asp-validation-for="Username" id="Username-validation" class="text-danger" role="alert" aria-live="polite"></span>
             </div>
 
             <div class="mb-3">
                 <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" autocomplete="current-password" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+                <input asp-for="Password"
+                       class="form-control"
+                       autocomplete="current-password"
+                       aria-describedby="Password-validation"
+                       aria-invalid="@passwordInvalid.ToString().ToLowerInvariant()" />
+                <span asp-validation-for="Password" id="Password-validation" class="text-danger" role="alert" aria-live="polite"></span>
             </div>
 
             <div class="mb-3 form-check">
